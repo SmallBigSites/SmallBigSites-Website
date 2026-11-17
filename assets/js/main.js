@@ -528,8 +528,37 @@ function initQuoteWizard() {
     });
     data.services = services;
 
-    // Show simulated confirmation modal
-    showQuoteSuccess(data);
+    // Forms that opt in (homepage) send to Formspree before confirming.
+    // quote.html posts via its own inline handler, so it skips this branch.
+    if (!quoteForm.hasAttribute('data-formspree-submit')) {
+      showQuoteSuccess(data);
+      return;
+    }
+
+    const btn = quoteForm.querySelector('button[type="submit"]');
+    const btnHtml = btn ? btn.innerHTML : '';
+    if (btn) { btn.textContent = 'Sending…'; btn.disabled = true; }
+
+    fetch(quoteForm.action, {
+      method: 'POST',
+      body: formData,
+      headers: { 'Accept': 'application/json' }
+    })
+      .then((response) => {
+        if (response.ok) {
+          showQuoteSuccess(data);
+          quoteForm.reset();
+          updateEstimate();
+        } else {
+          alert('Something went wrong. Please try again or call us at (641) 295-2311.');
+        }
+      })
+      .catch(() => {
+        alert('Network error. Please try again or call us at (641) 295-2311.');
+      })
+      .finally(() => {
+        if (btn) { btn.innerHTML = btnHtml; btn.disabled = false; }
+      });
   });
 }
 
