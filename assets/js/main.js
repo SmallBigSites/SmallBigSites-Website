@@ -575,7 +575,7 @@ function showQuoteSuccess(data) {
         <p><strong>Contact Email:</strong> ${data.email || 'Provided'}</p>
         <p><strong>Category:</strong> ${data.business_type || 'Local Service'}</p>
         <p><strong>Selected Services:</strong> ${(data.services && data.services.length) ? data.services.join(', ') : 'Custom Package'}</p>
-        <p><strong>Selected Budget:</strong> ${data.budget || '$500 - $800'}</p>
+        <p><strong>Selected Budget:</strong> ${data.budget || 'Business Growth ($599)'}</p>
         <div class="mt-2 text-emerald-800 font-semibold bg-emerald-100/70 p-2 rounded">
           🎉 Next Step: We will review your business information and send your custom website roadmap within 24 hours.
         </div>
