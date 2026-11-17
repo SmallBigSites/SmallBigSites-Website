@@ -37,6 +37,20 @@
 
   <!-- Custom Styles -->
   <link rel="stylesheet" href="assets/css/style.css">
+  <style>
+    /* Package picker: selected state is a solid dark-green card with a check badge,
+       so it stays obvious even on the green-highlighted "Most Popular" option. */
+    .budget-check { display:none; position:absolute; top:-0.5rem; right:-0.5rem; width:1.4rem; height:1.4rem;
+      border-radius:9999px; background:#ffffff; color:#15803d; font-weight:900; font-size:0.8rem; line-height:1.4rem;
+      box-shadow:0 0 0 2px #15803d; }
+    .budget-option:has(input:checked) { background:#15803d !important; border-color:#14532d !important;
+      box-shadow:0 0 0 3px #86efac; }
+    .budget-option:has(input:checked) .budget-title,
+    .budget-option:has(input:checked) .budget-price,
+    .budget-option:has(input:checked) .budget-sub { color:#ffffff !important; }
+    .budget-option:has(input:checked) .budget-check { display:block; }
+    .budget-option:has(input:focus-visible) { outline:2px solid #15803d; outline-offset:2px; }
+  </style>
 </head>
 <body class="bg-slate-50 text-slate-800 antialiased selection:bg-brand-500 selection:text-white">
 
@@ -245,36 +259,36 @@
               </div>
             </div>
 
-            <!-- Section 3: Budget Range -->
+            <!-- Section 3: Package Selection -->
             <div>
               <div class="flex items-center gap-2 border-b pb-3 mb-5">
                 <span class="w-6 h-6 rounded-full bg-brand-700 text-white text-xs font-bold flex items-center justify-center">3</span>
-                <h3 class="text-base font-bold text-slate-900">Target Budget Range</h3>
+                <h3 class="text-base font-bold text-slate-900">Choose Your Package</h3>
               </div>
 
-              <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
-                <label class="border border-slate-300 rounded-xl p-3.5 text-center cursor-pointer bg-slate-50 hover:border-brand-600 transition">
-                  <input type="radio" name="budget" value="Starter ($399 - $500)" checked class="hidden peer">
-                  <span class="block font-bold peer-checked:text-brand-700">Under $500</span>
-                  <span class="text-[10px] text-slate-500 block mt-0.5">Starter Package</span>
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+                <label class="budget-option relative border border-slate-300 rounded-xl p-3.5 text-center cursor-pointer bg-slate-50 hover:border-brand-600 transition">
+                  <input type="radio" name="budget" value="Starter Website ($399)" class="sr-only">
+                  <span class="budget-check" aria-hidden="true">&#10003;</span>
+                  <span class="budget-title block font-bold text-slate-900">Starter Website</span>
+                  <span class="budget-price block text-lg font-black text-slate-900 mt-0.5">$399</span>
+                  <span class="budget-sub text-[10px] text-slate-500 block mt-0.5">One-time setup</span>
                 </label>
 
-                <label class="border-2 border-brand-500 rounded-xl p-3.5 text-center cursor-pointer bg-white transition shadow-sm">
-                  <input type="radio" name="budget" value="Growth ($500 - $800)" checked class="hidden peer">
-                  <span class="block font-bold text-brand-800">★ $500 – $800</span>
-                  <span class="text-[10px] text-brand-700 block mt-0.5">Most Popular</span>
+                <label class="budget-option budget-popular relative border-2 border-brand-500 rounded-xl p-3.5 text-center cursor-pointer bg-brand-50 transition shadow-sm">
+                  <input type="radio" name="budget" value="Business Growth ($599)" checked class="sr-only">
+                  <span class="budget-check" aria-hidden="true">&#10003;</span>
+                  <span class="budget-title block font-bold text-brand-800">&#9733; Business Growth</span>
+                  <span class="budget-price block text-lg font-black text-slate-900 mt-0.5">$599</span>
+                  <span class="budget-sub text-[10px] text-brand-700 font-bold block mt-0.5">Most Popular</span>
                 </label>
 
-                <label class="border border-slate-300 rounded-xl p-3.5 text-center cursor-pointer bg-slate-50 hover:border-brand-600 transition">
-                  <input type="radio" name="budget" value="Pro ($800 - $1,500)" class="hidden peer">
-                  <span class="block font-bold peer-checked:text-brand-700">$800 – $1,500</span>
-                  <span class="text-[10px] text-slate-500 block mt-0.5">Full-Service Engine</span>
-                </label>
-
-                <label class="border border-slate-300 rounded-xl p-3.5 text-center cursor-pointer bg-slate-50 hover:border-brand-600 transition">
-                  <input type="radio" name="budget" value="Custom ($1,500+)" class="hidden peer">
-                  <span class="block font-bold peer-checked:text-brand-700">$1,500+</span>
-                  <span class="text-[10px] text-slate-500 block mt-0.5">Multi-Location</span>
+                <label class="budget-option relative border border-slate-300 rounded-xl p-3.5 text-center cursor-pointer bg-slate-50 hover:border-brand-600 transition">
+                  <input type="radio" name="budget" value="Full-Service Marketing ($799+)" class="sr-only">
+                  <span class="budget-check" aria-hidden="true">&#10003;</span>
+                  <span class="budget-title block font-bold text-slate-900">Full-Service Marketing</span>
+                  <span class="budget-price block text-lg font-black text-slate-900 mt-0.5">$799+</span>
+                  <span class="budget-sub text-[10px] text-slate-500 block mt-0.5">Complete growth engine</span>
                 </label>
               </div>
             </div>
@@ -429,10 +443,13 @@
       const urlParams = new URLSearchParams(window.location.search);
       const pkg = urlParams.get('package');
       if (pkg === 'starter') {
-        const starterRadio = document.querySelector('input[name="budget"][value^="Starter"]');
+        const starterRadio = document.querySelector('input[name="budget"][value^="Starter Website"]');
         if (starterRadio) { starterRadio.checked = true; starterRadio.dispatchEvent(new Event('change')); }
+      } else if (pkg === 'growth') {
+        const growthRadio = document.querySelector('input[name="budget"][value^="Business Growth"]');
+        if (growthRadio) { growthRadio.checked = true; growthRadio.dispatchEvent(new Event('change')); }
       } else if (pkg === 'fullservice') {
-        const fullRadio = document.querySelector('input[name="budget"][value^="Pro"]');
+        const fullRadio = document.querySelector('input[name="budget"][value^="Full-Service"]');
         if (fullRadio) { fullRadio.checked = true; fullRadio.dispatchEvent(new Event('change')); }
       }
 
